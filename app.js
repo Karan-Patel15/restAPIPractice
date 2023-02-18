@@ -1,15 +1,15 @@
-let axios = require('axios'); // exports a object we can use
 let express = require('express');
 const port = 80;
 
-//axios.get() returns a pending promise that can be resolved or rejected
+
 let app = express();
 app.listen(port, () => {
     console.log(`listening on port: ${port}`);
 })
 
 app.get('/api/contacts', (req, res) => {
-    res.send({
+    
+    res.status(200).send({
         person1: {
             id: 0162,
             firstname: 'Karan',
@@ -28,23 +28,35 @@ app.get('/api/contacts', (req, res) => {
     });
 })
 
-app.post('api/contacts', (req, res) => {
-
+app.post('/api/contacts', (req, res) => {
+    const body = req.json(req.body) //parse the request body into a JS object that we can use
+    if (!res.body) {
+        res.status(400).send("Invalid Input");
+    } else {
+        res.status(201).send("Successfully added new contact");
+    }
+    
 })
 
 app.delete('/api/contacts', (req, res) => {
-
+    res.status(200).send("Successfully deleted all contacts");
 })
 // : means anything
 app.get('/api/contacts/:contactID', (req, res) => {
-    res.send(req.params.contactID)
+    res.status(200).send(`Contact found ${req.params.contactID}`);
 })
 
-app.put('/api/contacts/:', (req, res) => {
-    console.log('put request')
+app.put('/api/contacts/:contactID', (req, res) => {
+    if (!res.body) {
+        res.status(400).send("Invalid Input");
+    } 
+    else {
+        res.status(200).send("Successfully Updated Contact");
+    }
+    
 })
 
-app.delete('//api/contacts/:contactID', (req, res) => {
-    console.log('delete contact request')
+app.delete('/api/contacts/:contactID', (req, res) => {
+    res.status(200).send("Successfully deleted contact");
 })
 
